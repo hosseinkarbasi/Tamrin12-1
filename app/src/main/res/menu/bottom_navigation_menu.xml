@@ -10,7 +10,7 @@
         android:title="@string/coming_soon" />
     <item
         android:id="@+id/favoriteFragment"
-        android:icon="@drawable/ic_baseline_favorite_24"
+        android:icon="@drawable/ic_baseline_favorite_border_24"
         android:title="@string/favorite" />
     <item
         android:id="@+id/registerFragment"

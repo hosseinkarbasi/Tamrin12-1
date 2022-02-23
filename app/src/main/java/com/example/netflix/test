@@ -21,3 +21,8 @@ private val movieImgBank = listOf(
         MovieItem(R.drawable.movie20, "Venom", false),
         MovieItem(R.drawable.movie21, "Wrath Of Man", false)
     )
+
+    @BindingAdapter("visibilityCardView")
+    fun goneUnless(view: View, visible: Boolean) {
+        view.visibility = if (visible) View.VISIBLE else View.GONE
+    }

@@ -5,27 +5,32 @@ import android.os.Bundle
 import android.util.Patterns
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.netflix.databinding.RegisterBinding
+import java.io.InputStream
 
 class RegisterFragment : Fragment(R.layout.register) {
 
-    private var imageAddresses: Uri? = null
+    private lateinit var imageAddresses: Uri
     private lateinit var binding: RegisterBinding
     private val registerViewModel: RegisterViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding = RegisterBinding.bind(view)
+        binding = DataBindingUtil.bind(view)!!
 
         with(binding) {
             btnRegister.setOnClickListener {
 
                 if (!validateFirstName() || !validateLastName() || !validateEmail()) {
                     return@setOnClickListener
+
                 } else {
+                    val stream: InputStream? =
+                        requireContext().contentResolver.openInputStream(imageAddresses)
+                    registerViewModel.uploadImageProfile(stream!!.readBytes())
 
                     registerViewModel.isRegister()
 
@@ -35,17 +40,16 @@ class RegisterFragment : Fragment(R.layout.register) {
                         edLastName.text.toString(),
                         edEmail.text.toString(),
                         edPhoneNumber.text.toString(),
-                        imageAddresses!!,
+                        imageAddresses,
                         this@RegisterFragment
                     )
                 }
             }
-            loadImageFromGallery()
+            selectImageFromGallery()
         }
     }
 
-
-    private fun RegisterBinding.loadImageFromGallery() {
+    private fun RegisterBinding.selectImageFromGallery() {
         val loadImage = registerForActivityResult(ActivityResultContracts.GetContent()) {
             imageAddresses = it
             btnSelectImgProfile.setImageURI(it)
